@@ -16,7 +16,7 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------
-# Theme / CSS — High Contrast Custom Styling
+# Theme / CSS — Strict Style Decoupling
 # ---------------------------------------------------------
 st.markdown("""
 <style>
@@ -33,9 +33,10 @@ st.markdown("""
     --border: #ECD3DB;
 }
 
-html, body, [class*="css"], .stApp, .stMarkdown, p, div, span,
-h1, h2, h3, h4, label, input, textarea, select, button {
-    font-family: "Times New Roman", Times, Georgia, serif !important;
+/* Apply Times New Roman globally EXCEPT inside Plotly chart layers */
+html, body, .stApp, .stMarkdown, p, label, input, textarea, select, button,
+:not(.js-plotly-plot):not(.plotly):not(.main-svg) {
+    font-family: "Times New Roman", Times, Georgia, serif;
 }
 
 html { font-size: 18px; }
@@ -54,18 +55,21 @@ html { font-size: 18px; }
 [data-testid="stHeader"] { background: transparent; }
 [data-testid="stToolbar"] { visibility: hidden; height: 0; }
 
-/* Force pure white background on Plotly chart containers & inner SVGs */
-[data-testid="stVegaLiteChart"], 
-[data-testid="stPlotlyChart"],
-.stPlotlyChart,
-.js-plotly-plot,
-.plot-container,
-.user-select-none,
-.svg-container,
-.main-svg {
+/* Pure White Plotly Container Styling */
+[data-testid="stPlotlyChart"], .stPlotlyChart, .js-plotly-plot {
     background-color: #FFFFFF !important;
-    background: #FFFFFF !important;
     border-radius: 8px;
+    border: 1px solid var(--border);
+    padding: 10px;
+}
+
+/* Force Plotly tick text and axis labels to remain dark maroon/black */
+.js-plotly-plot .plotly .xtick text,
+.js-plotly-plot .plotly .ytick text,
+.js-plotly-plot .plotly .gtitle,
+.js-plotly-plot .plotly .legendtext {
+    fill: #2B0714 !important;
+    color: #2B0714 !important;
 }
 
 .hero {
@@ -91,6 +95,7 @@ html { font-size: 18px; }
     margin: 10px 0 8px;
     font-weight: 700;
     letter-spacing: -.5px;
+    color: #FFFFFF !important;
 }
 
 .hero p {
@@ -287,6 +292,7 @@ html { font-size: 18px; }
     font-size: 32px;
     margin: 0 0 10px;
     font-weight: 700;
+    color: #FFFFFF !important;
 }
 
 .finale p {
@@ -642,7 +648,7 @@ with chart_col:
             mode="lines+markers",
             name="Without proactive financing",
             line=dict(color="#97144D", width=3, dash="dot"),
-            marker=dict(size=6),
+            marker=dict(size=6, color="#97144D"),
         ))
 
         fig.add_trace(go.Scatter(
@@ -651,7 +657,7 @@ with chart_col:
             mode="lines+markers",
             name=f"After ₹{need}L funding",
             line=dict(color="#D71920", width=4),
-            marker=dict(size=6),
+            marker=dict(size=6, color="#D71920"),
         ))
 
         fig.add_vline(
@@ -664,13 +670,13 @@ with chart_col:
             annotation_font=dict(color="#D71920", size=13),
         )
 
-        # Explicitly enforcing bright white backgrounds and crisp axes
+        # Explicit layout configuration isolating Plotly text rendering
         fig.update_layout(
             height=410,
             margin=dict(l=10, r=10, t=40, b=10),
             paper_bgcolor="#FFFFFF",
             plot_bgcolor="#FFFFFF",
-            font=dict(family="Times New Roman, Times, serif", size=15, color="#2B0714"),
+            font=dict(size=14, color="#2B0714"),
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
@@ -678,7 +684,8 @@ with chart_col:
                 x=0,
                 bgcolor="#FFFFFF",
                 bordercolor="#ECD3DB",
-                borderwidth=1
+                borderwidth=1,
+                font=dict(color="#2B0714", size=13)
             ),
             xaxis=dict(
                 gridcolor="#FBEAF0",
@@ -686,7 +693,8 @@ with chart_col:
                 zeroline=False,
                 linecolor="#ECD3DB",
                 linewidth=1,
-                title="Forecast period"
+                title=dict(text="Forecast period", font=dict(color="#2B0714", size=14)),
+                tickfont=dict(color="#2B0714", size=12)
             ),
             yaxis=dict(
                 gridcolor="#FBEAF0",
@@ -694,13 +702,13 @@ with chart_col:
                 zeroline=False,
                 linecolor="#ECD3DB",
                 linewidth=1,
-                title="Projected Cash Balance (₹L)"
+                title=dict(text="Projected Cash Balance (₹L)", font=dict(color="#2B0714", size=14)),
+                tickfont=dict(color="#2B0714", size=12)
             ),
             hoverlabel=dict(
                 bgcolor="#FFFFFF",
                 font_size=14,
-                font_color="#2B0714",
-                font_family="Times New Roman, Times, serif"
+                font_color="#2B0714"
             )
         )
         st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
