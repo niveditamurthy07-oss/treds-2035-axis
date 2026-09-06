@@ -435,6 +435,49 @@ section[data-testid="stSidebar"] { background: #FFF3F6; }
     .section { font-size: 22px; }
     .stat-strip { grid-template-columns: repeat(2, 1fr); }
 }
+.outcome-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+    margin: 8px 0 24px 0;
+}
+
+.outcome-card {
+    background: #FFFFFF !important;
+    border: 1px solid #ECD3DB !important;
+    border-left: 5px solid #97144D !important;
+    border-radius: 10px;
+    padding: 26px 24px;
+    min-height: 112px;
+    box-sizing: border-box;
+}
+
+.outcome-label {
+    color: #6E4655 !important;
+    font-family: "Times New Roman", Times, Georgia, serif !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    opacity: 1 !important;
+    margin: 0 0 12px 0 !important;
+}
+
+.outcome-value {
+    color: #2B0714 !important;
+    font-family: "Times New Roman", Times, Georgia, serif !important;
+    font-size: 31px !important;
+    font-weight: 500 !important;
+    line-height: 1.15 !important;
+    opacity: 1 !important;
+    margin: 0 !important;
+}
+
+@media (max-width: 900px) {
+    .outcome-grid {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -771,7 +814,7 @@ st.markdown(f"""
   <b style="font-size:19px">AI Recommendation: {best_bank}</b><br>
   <span class="muted">{recommendation_text[scenario]}</span>
   <br><br>
-  <b>Recommendation confidence:</b> {confidence}%
+  <b>Prediction confidence:</b> {confidence}%
 </div>
 """, unsafe_allow_html=True)
 
@@ -780,14 +823,26 @@ st.markdown(f"""
 # ---------------------------------------------------------
 st.markdown('<div class="section">05 · Funding Outcome</div>', unsafe_allow_html=True)
 
-x, y, z = st.columns(3, gap="medium")
+st.markdown(f"""
+<div class="outcome-grid">
 
-with x:
-    st.metric("Funding Prepared", f"₹{need}L")
-with y:
-    st.metric("Indicative Time-to-Bid", "<30 min")
-with z:
-    st.metric("Monitoring", "Continuous")
+    <div class="outcome-card">
+        <div class="outcome-label">FUNDING OPPORTUNITY</div>
+        <div class="outcome-value">₹{need}L</div>
+    </div>
+
+    <div class="outcome-card">
+        <div class="outcome-label">TIME-TO-BID</div>
+        <div class="outcome-value">&lt;30 min</div>
+    </div>
+
+    <div class="outcome-card">
+        <div class="outcome-label">RISK MONITORING</div>
+        <div class="outcome-value">Continuous</div>
+    </div>
+
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown(f"""
 <div class="finale">
