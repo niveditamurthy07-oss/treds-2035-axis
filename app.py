@@ -826,20 +826,20 @@ st.markdown('<div class="section">05 · Funding Outcome</div>', unsafe_allow_htm
 st.markdown(f"""
 <div class="outcome-grid">
 
-    <div class="outcome-card">
-        <div class="outcome-label">FUNDING OPPORTUNITY</div>
-        <div class="outcome-value">₹{need}L</div>
-    </div>
+<div class="outcome-card">
+<div class="outcome-label">FUNDING OPPORTUNITY</div>
+<div class="outcome-value">₹{need}L</div>
+</div>
 
-    <div class="outcome-card">
-        <div class="outcome-label">TIME-TO-BID</div>
-        <div class="outcome-value">&lt;30 min</div>
-    </div>
+<div class="outcome-card">
+<div class="outcome-label">TIME-TO-BID</div>
+<div class="outcome-value">&lt;30 min</div>
+</div>
 
-    <div class="outcome-card">
-        <div class="outcome-label">RISK MONITORING</div>
-        <div class="outcome-value">Continuous</div>
-    </div>
+<div class="outcome-card">
+<div class="outcome-label">RISK MONITORING</div>
+<div class="outcome-value">Continuous</div>
+</div>
 
 </div>
 """, unsafe_allow_html=True)
