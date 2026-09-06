@@ -691,66 +691,284 @@ with chart_col:
     if PLOTLY_OK:
         fig = go.Figure()
 
+        # ============================================================
+        # 1. CASH BALANCE — WITHOUT PROACTIVE FINANCING
+        # ============================================================
         fig.add_trace(go.Scatter(
             x=weeks,
             y=without_fin,
-            mode="lines+markers",
+            mode="lines+markers+text",
             name="Without proactive financing",
-            line=dict(color="#97144D", width=3, dash="dot"),
-            marker=dict(size=6),
+
+            # Neutral grey so Axis red remains the key highlight
+            line=dict(
+                color="#777777",
+                width=3,
+                dash="dot"
+            ),
+
+            marker=dict(
+                color="#777777",
+                size=8,
+                line=dict(
+                    color="#FFFFFF",
+                    width=2
+                )
+            ),
+
+            # Data-point labels
+            text=[f"₹{v:.1f}L" for v in without_fin],
+            textposition="bottom center",
+            textfont=dict(
+                family="Times New Roman, Times, serif",
+                size=12,
+                color="#222222"
+            ),
+
+            hovertemplate=(
+                "<b>Without proactive financing</b><br>"
+                "Cash balance: ₹%{y:.1f}L"
+                "<extra></extra>"
+            )
         ))
 
+        # ============================================================
+        # 2. CASH BALANCE — WITH PROACTIVE FINANCING
+        # ============================================================
         fig.add_trace(go.Scatter(
             x=weeks,
             y=with_fin,
-            mode="lines+markers",
-            name=f"After ₹{need}L funding",
-            line=dict(color="#D71920", width=4),
-            marker=dict(size=6),
+            mode="lines+markers+text",
+            name=f"With ₹{need}L proactive financing",
+
+            # Axis red — primary highlight
+            line=dict(
+                color="#D71920",
+                width=4
+            ),
+
+            marker=dict(
+                color="#D71920",
+                size=9,
+                line=dict(
+                    color="#FFFFFF",
+                    width=2
+                )
+            ),
+
+            # Data-point labels
+            text=[f"₹{v:.1f}L" for v in with_fin],
+            textposition="top center",
+            textfont=dict(
+                family="Times New Roman, Times, serif",
+                size=12,
+                color="#222222"
+            ),
+
+            hovertemplate=(
+                f"<b>With ₹{need}L proactive financing</b><br>"
+                "Cash balance: ₹%{y:.1f}L"
+                "<extra></extra>"
+            )
         ))
 
+        # ============================================================
+        # 3. FUNDING INTERVENTION
+        # ============================================================
         fig.add_vline(
             x=weeks[alert_idx],
-            line_width=1.5,
+            line_width=2,
             line_dash="dash",
-            line_color="#D71920",
-            annotation_text="Funding triggered",
-            annotation_position="top",
-            annotation_font=dict(color="#D71920", size=13),
+            line_color="#D71920"
         )
 
-        fig.update_layout(
-            height=410,
-            margin=dict(l=10, r=10, t=40, b=10),
-            paper_bgcolor="white",
-            plot_bgcolor="white",
-            font=dict(family="Times New Roman, Times, serif", size=15, color="#FFFFFF"),
-            legend=dict(orientation="h", yanchor="bottom", y=1.06, x=0),
-            xaxis=dict(gridcolor="#ECD3DB", title="Forecast period"),
-            yaxis=dict(gridcolor="#ECD3DB", title="Projected Cash Balance (₹L)"),
+        fig.add_annotation(
+            x=weeks[alert_idx],
+            y=max(max(with_fin), max(without_fin)) + 0.5,
+
+            text="<b>Funding triggered</b>",
+
+            showarrow=True,
+            arrowhead=2,
+            arrowsize=1,
+            arrowwidth=1.5,
+            arrowcolor="#D71920",
+
+            ax=0,
+            ay=-35,
+
+            font=dict(
+                family="Times New Roman, Times, serif",
+                size=13,
+                color="#222222"
+            ),
+
+            bgcolor="#FFFFFF",
+            bordercolor="#D71920",
+            borderwidth=1,
+            borderpad=5
         )
-        st.plotly_chart(fig, use_container_width=True)
+
+        # ============================================================
+        # 4. CHART LAYOUT
+        # ============================================================
+        fig.update_layout(
+
+            # Size
+            height=430,
+
+            # Spacing
+            margin=dict(
+                l=65,
+                r=25,
+                t=75,
+                b=60
+            ),
+
+            # WHITE BACKGROUND
+            paper_bgcolor="#FFFFFF",
+            plot_bgcolor="#FFFFFF",
+
+            # DEFAULT TEXT
+            font=dict(
+                family="Times New Roman, Times, serif",
+                size=15,
+                color="#222222"
+            ),
+
+            # --------------------------------------------------------
+            # TITLE
+            # --------------------------------------------------------
+            title=dict(
+                text="<b>Projected Cash Balance — Impact of Proactive Financing</b>",
+                x=0,
+                xanchor="left",
+                font=dict(
+                    family="Times New Roman, Times, serif",
+                    size=20,
+                    color="#222222"
+                )
+            ),
+
+            # --------------------------------------------------------
+            # LEGEND
+            # --------------------------------------------------------
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="left",
+                x=0,
+
+                bgcolor="#FFFFFF",
+
+                font=dict(
+                    family="Times New Roman, Times, serif",
+                    size=13,
+                    color="#222222"
+                )
+            ),
+
+            # --------------------------------------------------------
+            # X-AXIS
+            # --------------------------------------------------------
+            xaxis=dict(
+                title=dict(
+                    text="<b>Forecast period</b>",
+                    font=dict(
+                        family="Times New Roman, Times, serif",
+                        size=15,
+                        color="#222222"
+                    )
+                ),
+
+                tickfont=dict(
+                    family="Times New Roman, Times, serif",
+                    size=13,
+                    color="#222222"
+                ),
+
+                showline=True,
+                linecolor="#555555",
+                linewidth=1,
+
+                gridcolor="#E8E8E8",
+                gridwidth=1,
+
+                zeroline=False
+            ),
+
+            # --------------------------------------------------------
+            # Y-AXIS
+            # --------------------------------------------------------
+            yaxis=dict(
+                title=dict(
+                    text="<b>Projected Cash Balance (₹L)</b>",
+                    font=dict(
+                        family="Times New Roman, Times, serif",
+                        size=15,
+                        color="#222222"
+                    )
+                ),
+
+                tickfont=dict(
+                    family="Times New Roman, Times, serif",
+                    size=13,
+                    color="#222222"
+                ),
+
+                showline=True,
+                linecolor="#555555",
+                linewidth=1,
+
+                gridcolor="#E8E8E8",
+                gridwidth=1,
+
+                zeroline=False
+            ),
+
+            # --------------------------------------------------------
+            # HOVER TOOLTIP
+            # --------------------------------------------------------
+            hoverlabel=dict(
+                bgcolor="#FFFFFF",
+                bordercolor="#D71920",
+
+                font=dict(
+                    family="Times New Roman, Times, serif",
+                    size=13,
+                    color="#222222"
+                )
+            )
+        )
+
+        # ============================================================
+        # 5. DISPLAY
+        # ============================================================
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
     else:
         chart_df = pd.DataFrame(
-            {"Without financing": without_fin, "After financing": with_fin},
+            {
+                "Without financing": without_fin,
+                "After financing": with_fin
+            },
             index=weeks
         )
+
         st.line_chart(chart_df)
 
+    # ================================================================
+    # CHART CAPTION
+    # ================================================================
     st.markdown(
-        '<div class="chart-caption">Illustrative scenario: the financing intervention is shown at the point where the AI flags the projected liquidity gap.</div>',
-        unsafe_allow_html=True
-    )
-
-with gauge_col:
-    deg = int(confidence / 100 * 360)
-    st.markdown(
-        f'<div class="gauge-wrap">'
-        f'<div class="gauge" style="background: conic-gradient(#D71920 {deg}deg, #FBEAF0 0deg);">'
-        f'<div class="inner"><div class="pct">{confidence}%</div>'
-        f'<div class="sub">AI PREDICTION<br>CONFIDENCE</div></div></div>'
-        f'<div class="gauge-caption">Confidence in the simulated prediction that a funding requirement will emerge within the forecast window.</div>'
-        f'</div>',
+        '<div class="chart-caption">'
+        'Illustrative scenario: the financing intervention is shown at '
+        'the point where the AI flags the projected liquidity gap.'
+        '</div>',
         unsafe_allow_html=True
     )
 
