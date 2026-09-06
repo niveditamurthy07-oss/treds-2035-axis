@@ -383,14 +383,40 @@ div[data-testid="stMetric"] {
     min-height: 112px;
 }
 
-div[data-testid="stMetricLabel"] {
-    color: var(--muted);
-    font-size: 15px !important;
+/* ---------------------------------
+   METRIC CARDS
+   Chrome-safe typography
+--------------------------------- */
+
+div[data-testid="stMetric"] {
+    background: white !important;
+    border: 1px solid var(--border) !important;
+    border-left: 4px solid var(--red) !important;
+    padding: 18px 20px !important;
+    border-radius: 10px !important;
+    min-height: 112px !important;
 }
 
-div[data-testid="stMetricValue"] {
-    color: var(--text);
+/* Metric label */
+div[data-testid="stMetricLabel"],
+div[data-testid="stMetricLabel"] p,
+div[data-testid="stMetricLabel"] span,
+div[data-testid="stMetricLabel"] div {
+    color: #6E4655 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    opacity: 1 !important;
+}
+
+/* Metric value */
+div[data-testid="stMetricValue"],
+div[data-testid="stMetricValue"] div,
+div[data-testid="stMetricValue"] span {
+    color: #2B0714 !important;
     font-size: 30px !important;
+    font-weight: 500 !important;
+    opacity: 1 !important;
+
 }
 
 input[type="radio"] { accent-color: var(--red) !important; }
