@@ -724,7 +724,7 @@ with chart_col:
             margin=dict(l=10, r=10, t=40, b=10),
             paper_bgcolor="white",
             plot_bgcolor="white",
-            font=dict(family="Times New Roman, Times, serif", size=15, color="#2B0714"),
+            font=dict(family="Times New Roman, Times, serif", size=15, color="#FFFFFF"),
             legend=dict(orientation="h", yanchor="bottom", y=1.06, x=0),
             xaxis=dict(gridcolor="#ECD3DB", title="Forecast period"),
             yaxis=dict(gridcolor="#ECD3DB", title="Projected Cash Balance (₹L)"),
