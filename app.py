@@ -16,7 +16,7 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------
-# Theme / CSS — Axis Bank Red & White
+# Theme / CSS — Axis Bank Red & White (Fixed Contrast Rules)
 # ---------------------------------------------------------
 st.markdown("""
 <style>
@@ -29,7 +29,7 @@ st.markdown("""
     --white: #FFFFFF;
     --bg: #FDFAFA;
     --text: #2B0714;
-    --muted: #7A5464;
+    --muted: #5C0C30;
     --border: #ECD3DB;
 }
 
@@ -140,6 +140,7 @@ html { font-size: 18px; }
     color: var(--muted);
     letter-spacing: .4px;
     margin-top: 4px;
+    font-weight: 700;
 }
 
 .section {
@@ -192,7 +193,7 @@ html { font-size: 18px; }
 
 .label {
     font-size: 13px;
-    color: var(--muted);
+    color: var(--maroon) !important;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 700;
@@ -253,7 +254,7 @@ html { font-size: 18px; }
 }
 
 .ai p {
-    color: #6E4655;
+    color: #5C0C30;
     margin: 0 0 12px;
     font-size: 17px;
     line-height: 1.6;
@@ -290,6 +291,7 @@ html { font-size: 18px; }
     margin: 4px 6px 4px 0;
     font-size: 15px;
     color: var(--text);
+    font-weight: 600;
 }
 
 .bar-row {
@@ -372,6 +374,7 @@ html { font-size: 18px; }
     color: var(--muted);
     letter-spacing: .4px;
     text-align: center;
+    font-weight: 700;
 }
 
 .gauge-caption {
@@ -396,23 +399,31 @@ html { font-size: 18px; }
     margin-top: 32px;
 }
 
+/* Explicit fixes for Streamlit metric labels */
 div[data-testid="stMetric"] {
-    background: white;
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--red);
-    padding: 18px 20px;
-    border-radius: 10px;
-    min-height: 112px;
+    background: white !important;
+    border: 1px solid var(--border) !important;
+    border-left: 4px solid var(--red) !important;
+    padding: 18px 20px !important;
+    border-radius: 10px !important;
+    min-height: 112px !important;
 }
 
-div[data-testid="stMetricLabel"] {
-    color: var(--muted);
-    font-size: 15px !important;
+div[data-testid="stMetricLabel"], 
+div[data-testid="stMetricLabel"] > div,
+div[data-testid="stMetricLabel"] label,
+div[data-testid="stMetricLabel"] p {
+    color: #5C0C30 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
 }
 
-div[data-testid="stMetricValue"] {
-    color: var(--text);
+div[data-testid="stMetricValue"],
+div[data-testid="stMetricValue"] > div {
+    color: #2B0714 !important;
     font-size: 30px !important;
+    font-weight: 700 !important;
 }
 
 input[type="radio"] { accent-color: var(--red) !important; }
@@ -510,7 +521,7 @@ LIVE PROTOTYPE · Fictional MSME scenario · Illustrative AI simulation, not a r
 """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# Top KPIs — make the meanings explicit
+# Top KPIs
 # ---------------------------------------------------------
 best_bank = recommended_bank[scenario]
 best_score = next(ai for name, rate, tm, ai, why in scenario_bids[scenario] if name == best_bank)
@@ -550,7 +561,7 @@ for c, (a, b, d) in zip(row1 + row2, items):
         )
 
 # ---------------------------------------------------------
-# 02 AI Working Capital Intelligence — deliberately simple
+# 02 AI Working Capital Intelligence
 # ---------------------------------------------------------
 st.markdown('<div class="section">02 · AI Working Capital Intelligence</div>', unsafe_allow_html=True)
 st.markdown(
@@ -621,11 +632,9 @@ st.markdown(
 
 chart_col, gauge_col = st.columns([2.7, 1], gap="large")
 
-# Deterministic illustrative forecast — no random noise
 weeks = [f"Wk {i}" for i in range(1, 13)]
 without_fin = np.linspace(18.0, cash_end_no_fin, 12)
 
-# Financing is introduced at the point where the gap is identified.
 alert_idx = 3
 with_fin = without_fin.copy()
 with_fin[alert_idx:] = np.linspace(
