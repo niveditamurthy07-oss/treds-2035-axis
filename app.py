@@ -16,7 +16,7 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------
-# Theme / CSS — Axis Bank Red & White (Fixed Contrast Rules)
+# Theme / CSS — High Contrast Custom Styling
 # ---------------------------------------------------------
 st.markdown("""
 <style>
@@ -60,19 +60,6 @@ html { font-size: 18px; }
 .js-plotly-plot .plotly .main-svg {
     background-color: #FFFFFF !important;
     border-radius: 8px;
-}
-
-/* Fix Vega-Lite / Streamlit native chart tooltips in dark mode */
-#vg-tooltip-element {
-    background-color: #FFFFFF !important;
-    color: #2B0714 !important;
-    border: 1px solid #ECD3DB !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-}
-
-#vg-tooltip-element tr td.key,
-#vg-tooltip-element tr td.value {
-    color: #2B0714 !important;
 }
 
 .hero {
@@ -159,7 +146,7 @@ html { font-size: 18px; }
     margin: -8px 0 16px 2px;
 }
 
-.card, .signal, .bank, .kpi-card {
+.card, .signal, .bank, .custom-metric {
     background: #fff;
     border: 1px solid var(--border);
     border-radius: 10px;
@@ -168,6 +155,32 @@ html { font-size: 18px; }
 .card {
     padding: 20px 22px;
     min-height: 128px;
+}
+
+/* Custom Metric Card Replacement for reliable header rendering */
+.custom-metric {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--red);
+    padding: 16px 20px;
+    border-radius: 10px;
+    min-height: 110px;
+}
+
+.custom-metric .metric-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #5C0C30 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.custom-metric .metric-val {
+    font-size: 30px;
+    font-weight: 700;
+    color: #2B0714 !important;
+    line-height: 1.1;
 }
 
 .signal {
@@ -186,14 +199,9 @@ html { font-size: 18px; }
     box-shadow: 0 8px 22px rgba(215,25,32,.16);
 }
 
-.kpi-card {
-    padding: 20px 22px;
-    min-height: 118px;
-}
-
 .label {
     font-size: 13px;
-    color: var(--maroon) !important;
+    color: #5C0C30 !important;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 700;
@@ -322,10 +330,6 @@ html { font-size: 18px; }
     border-radius: 5px;
 }
 
-.bar-fill.alt {
-    background: var(--bright-red);
-}
-
 .bar-pct {
     width: 46px;
     font-size: 14px;
@@ -399,35 +403,6 @@ html { font-size: 18px; }
     margin-top: 32px;
 }
 
-/* Explicit fixes for Streamlit metric labels */
-div[data-testid="stMetric"] {
-    background: white !important;
-    border: 1px solid var(--border) !important;
-    border-left: 4px solid var(--red) !important;
-    padding: 18px 20px !important;
-    border-radius: 10px !important;
-    min-height: 112px !important;
-}
-
-div[data-testid="stMetricLabel"], 
-div[data-testid="stMetricLabel"] > div,
-div[data-testid="stMetricLabel"] label,
-div[data-testid="stMetricLabel"] p {
-    color: #5C0C30 !important;
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    opacity: 1 !important;
-}
-
-div[data-testid="stMetricValue"],
-div[data-testid="stMetricValue"] > div {
-    color: #2B0714 !important;
-    font-size: 30px !important;
-    font-weight: 700 !important;
-}
-
-input[type="radio"] { accent-color: var(--red) !important; }
-
 section[data-testid="stSidebar"] { background: #FFF3F6; }
 
 .stSelectbox label {
@@ -445,8 +420,18 @@ section[data-testid="stSidebar"] { background: #FFF3F6; }
 </style>
 """, unsafe_allow_html=True)
 
+# Helper function to render explicit high-contrast metric cards
+def render_metric(label, value):
+    st.markdown(
+        f'<div class="custom-metric">'
+        f'<div class="metric-title">{label}</div>'
+        f'<div class="metric-val">{value}</div>'
+        f'</div>',
+        unsafe_allow_html=True
+    )
+
 # ---------------------------------------------------------
-# Scenario
+# Scenario Data Selection
 # ---------------------------------------------------------
 scenario = st.session_state.get("scenario", "Base Case")
 
@@ -604,13 +589,13 @@ st.markdown(
 
 a, b, c, d = st.columns(4, gap="medium")
 with a:
-    st.metric("Liquidity Stress", f"{score}/100")
+    render_metric("Liquidity Stress", f"{score}/100")
 with b:
-    st.metric("Predicted Funding Need", f"₹{need}L")
+    render_metric("Predicted Funding Need", f"₹{need}L")
 with c:
-    st.metric("Expected Buyer Delay", f"{delay} days")
+    render_metric("Expected Buyer Delay", f"{delay} days")
 with d:
-    st.metric("Supplier Risk", risk)
+    render_metric("Supplier Risk", risk)
 
 st.markdown(f"""
 <div class="ai">
@@ -794,11 +779,11 @@ st.markdown('<div class="section">05 · Funding Outcome</div>', unsafe_allow_htm
 x, y, z = st.columns(3, gap="medium")
 
 with x:
-    st.metric("Funding Prepared", f"₹{need}L")
+    render_metric("Funding Prepared", f"₹{need}L")
 with y:
-    st.metric("Indicative Time-to-Bid", "<30 min")
+    render_metric("Indicative Time-to-Bid", "<30 min")
 with z:
-    st.metric("Monitoring", "Continuous")
+    render_metric("Monitoring", "Continuous")
 
 st.markdown(f"""
 <div class="finale">
