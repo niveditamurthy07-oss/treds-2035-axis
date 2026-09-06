@@ -397,15 +397,21 @@ div[data-testid="stMetric"] {
     min-height: 112px !important;
 }
 
-/* Metric label */
-div[data-testid="stMetricLabel"],
-div[data-testid="stMetricLabel"] p,
-div[data-testid="stMetricLabel"] span,
-div[data-testid="stMetricLabel"] div {
+/* FIX: Metric headings / labels */
+div[data-testid="stMetric"] [data-testid="stMetricLabel"] p {
     color: #6E4655 !important;
+    font-family: "Times New Roman", Times, Georgia, serif !important;
     font-size: 16px !important;
     font-weight: 600 !important;
     opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Ensure the metric label container itself is visible */
+div[data-testid="stMetric"] [data-testid="stMetricLabel"] {
+    color: #6E4655 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 /* Metric value */
