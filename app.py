@@ -54,11 +54,17 @@ html { font-size: 18px; }
 [data-testid="stHeader"] { background: transparent; }
 [data-testid="stToolbar"] { visibility: hidden; height: 0; }
 
-/* Force light background on all chart containers */
+/* Force pure white background on Plotly chart containers & inner SVGs */
 [data-testid="stVegaLiteChart"], 
 [data-testid="stPlotlyChart"],
-.js-plotly-plot .plotly .main-svg {
+.stPlotlyChart,
+.js-plotly-plot,
+.plot-container,
+.user-select-none,
+.svg-container,
+.main-svg {
     background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
     border-radius: 8px;
 }
 
@@ -157,7 +163,6 @@ html { font-size: 18px; }
     min-height: 128px;
 }
 
-/* Custom Metric Card Replacement for reliable header rendering */
 .custom-metric {
     background: #FFFFFF;
     border: 1px solid var(--border);
@@ -420,7 +425,6 @@ section[data-testid="stSidebar"] { background: #FFF3F6; }
 </style>
 """, unsafe_allow_html=True)
 
-# Helper function to render explicit high-contrast metric cards
 def render_metric(label, value):
     st.markdown(
         f'<div class="custom-metric">'
@@ -660,15 +664,38 @@ with chart_col:
             annotation_font=dict(color="#D71920", size=13),
         )
 
+        # Explicitly enforcing bright white backgrounds and crisp axes
         fig.update_layout(
             height=410,
             margin=dict(l=10, r=10, t=40, b=10),
             paper_bgcolor="#FFFFFF",
             plot_bgcolor="#FFFFFF",
             font=dict(family="Times New Roman, Times, serif", size=15, color="#2B0714"),
-            legend=dict(orientation="h", yanchor="bottom", y=1.06, x=0),
-            xaxis=dict(gridcolor="#ECD3DB", title="Forecast period"),
-            yaxis=dict(gridcolor="#ECD3DB", title="Projected Cash Balance (₹L)"),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.06,
+                x=0,
+                bgcolor="#FFFFFF",
+                bordercolor="#ECD3DB",
+                borderwidth=1
+            ),
+            xaxis=dict(
+                gridcolor="#FBEAF0",
+                showgrid=True,
+                zeroline=False,
+                linecolor="#ECD3DB",
+                linewidth=1,
+                title="Forecast period"
+            ),
+            yaxis=dict(
+                gridcolor="#FBEAF0",
+                showgrid=True,
+                zeroline=False,
+                linecolor="#ECD3DB",
+                linewidth=1,
+                title="Projected Cash Balance (₹L)"
+            ),
             hoverlabel=dict(
                 bgcolor="#FFFFFF",
                 font_size=14,
@@ -676,7 +703,7 @@ with chart_col:
                 font_family="Times New Roman, Times, serif"
             )
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
     else:
         chart_df = pd.DataFrame(
             {"Without financing": without_fin, "After financing": with_fin},
